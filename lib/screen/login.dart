@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:task2_basicapp/color/customcolor.dart';
+import 'package:task2_basicapp/database/sql_helper.dart';
 import 'package:task2_basicapp/screen/register.dart';
 import 'package:task2_basicapp/service/userdataservice.dart';
 
@@ -14,13 +15,21 @@ class _LoginState extends State<Login> {
   
   final _formKey = GlobalKey<FormState>();
 
-  TextEditingController username = TextEditingController();
+  TextEditingController mobile = TextEditingController();
   TextEditingController password = TextEditingController();
 
   final _userDataService = UserDataService();
 
-  void _checkUser(String username, String password) async {
-    final response = await _userDataService.getUser(username.toString(), password.toString());
+  void _checkUser(String mobile, String password) async {
+    //_userDataService.getUser(mobile.toString(), password.toString());
+    //print(_userDataService.getUser(mobile.toString(), password.toString()));
+    //print(response.toString());
+    // SQLHelper.getUser(mobile, password);
+    // List<Map<String, dynamic>> _users = [];
+  }
+
+  void _try() async {
+    _userDataService.getUser();
   }
 
   @override
@@ -41,10 +50,10 @@ class _LoginState extends State<Login> {
             child: Column(
               children: [ 
                 CustomWidget(
-                  labeltext: 'Username',
-                  hinttext: 'Enter Username',
+                  labeltext: 'Mobile',
+                  hinttext: 'Enter Mobile',
                   icon: Icons.person,
-                  controller: username,
+                  controller: mobile,
                 ),
                 SizedBox(
                   height: 10.0,
@@ -69,7 +78,10 @@ class _LoginState extends State<Login> {
               child: ElevatedButton(
                 onPressed: () {
                   if (_formKey.currentState!.validate())
-                    _checkUser(username.text.toString(), password.text.toString());
+                    // String mN = mobile.text.toString();
+                    // String pW = password.text.toString();
+                    // loginValidate(mobile.text.toString(), password.text.toString());
+                    _checkUser(mobile.text.toString(), password.text.toString());
                 },
                 child: Text('Login'),
                 style: ElevatedButton.styleFrom(
@@ -118,6 +130,22 @@ class _LoginState extends State<Login> {
                         style: TextStyle(color: colorGreen),
                       ))),
             ],
+          ),
+          Padding(
+            padding:
+                const EdgeInsets.symmetric(vertical: 0.0, horizontal: 40.0),
+            child: SizedBox(
+              height: 50,
+              child: ElevatedButton(
+                onPressed: () {
+                  _try();
+                },
+                child: Text('Try'),
+                style: ElevatedButton.styleFrom(
+                  primary: colorGreen,
+                ),
+              ),
+            ),
           ),
         ],
       ),
@@ -172,9 +200,9 @@ class CustomWidget extends StatelessWidget {
               ),
             ),
             validator: (value) {
-              if (labeltext == 'Username') {
+              if (labeltext == 'Mobile') {
                 if (value == null || value.isEmpty) {
-                  return 'Username is Empty';
+                  return 'Mobile is Empty';
                 }
                 return null;
               } else if (labeltext == 'Password') {
@@ -186,5 +214,21 @@ class CustomWidget extends StatelessWidget {
             }),
       ),
     );
+  }
+}
+
+Future<void> loginValidate(mN, pW) async {
+  List<Map<String, dynamic>> _users = [];
+  final data = await SQLHelper.getUser(mN, pW);
+  _users = data;
+  int l = _users.length;
+  if (mN.toString().isEmpty || pW.toString().isEmpty) {
+    print('Mobile Number and Password is Empty');
+  } else if ( l == 1 ) {
+    print('Mobile Number Found');
+    print('Welcome $mN');
+    
+  } else {
+    print('Mobile Number and Password does not matched');
   }
 }
