@@ -1,8 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:task2_basicapp/screen/login.dart';
 
 void main() {
-  runApp(MyApp());
+  //runApp(MyApp());
+    runApp(
+    GetMaterialApp(
+      home: MyApp(),
+      routes: {
+        '/login':(BuildContext context) => Login(),
+      },
+    )
+  );
 }
 
 class MyApp extends StatelessWidget {

@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:task2_basicapp/color/customcolor.dart';
 import 'package:task2_basicapp/database/sql_helper.dart';
+import 'package:task2_basicapp/screen/forgot.dart';
 import 'package:task2_basicapp/screen/register.dart';
 import 'package:task2_basicapp/service/userdataservice.dart';
 
 class Login extends StatefulWidget {
-  const Login({ Key? key }) : super(key: key);
+  const Login({Key? key}) : super(key: key);
 
   @override
   _LoginState createState() => _LoginState();
 }
 
 class _LoginState extends State<Login> {
-  
   final _formKey = GlobalKey<FormState>();
 
   TextEditingController mobile = TextEditingController();
@@ -32,6 +32,10 @@ class _LoginState extends State<Login> {
     _userDataService.getUser();
   }
 
+  void _searchUser(String userName, String password) async {
+    _userDataService.searchUser(userName, password);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,25 +51,22 @@ class _LoginState extends State<Login> {
           ),
           Form(
             key: _formKey,
-            child: Column(
-              children: [ 
-                CustomWidget(
-                  labeltext: 'Mobile',
-                  hinttext: 'Enter Mobile',
-                  icon: Icons.person,
-                  controller: mobile,
-                ),
-                SizedBox(
-                  height: 10.0,
-                ),
-                CustomWidget(
+            child: Column(children: [
+              CustomWidget(
+                labeltext: 'Mobile',
+                hinttext: 'Enter Mobile',
+                icon: Icons.person,
+                controller: mobile,
+              ),
+              SizedBox(
+                height: 10.0,
+              ),
+              CustomWidget(
                   labeltext: 'Password',
                   hinttext: 'Enter Password',
                   icon: Icons.lock,
-                  controller: password
-                )
-              ]
-            ),
+                  controller: password)
+            ]),
           ),
           SizedBox(
             height: 20.0,
@@ -81,7 +82,8 @@ class _LoginState extends State<Login> {
                     // String mN = mobile.text.toString();
                     // String pW = password.text.toString();
                     // loginValidate(mobile.text.toString(), password.text.toString());
-                    _checkUser(mobile.text.toString(), password.text.toString());
+                    _checkUser(
+                        mobile.text.toString(), password.text.toString());
                 },
                 child: Text('Login'),
                 style: ElevatedButton.styleFrom(
@@ -98,16 +100,28 @@ class _LoginState extends State<Login> {
                 const EdgeInsets.symmetric(vertical: 0.0, horizontal: 40.0),
             child: SizedBox(
               height: 50,
-              child: ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState!.validate());
-                    //verifyPhoneNumber(mobileNumber.text);
-                },
-                child: Text('Forgot Password'),
-                style: ElevatedButton.styleFrom(
-                  primary: colorGreen,
-                ),
-              ),
+              // child: ElevatedButton(
+              //   onPressed: () {
+              //     Forgot();
+              //   },
+              //   child: Text('Forgot Password'),
+              //   style: ElevatedButton.styleFrom(
+              //     primary: colorGreen,
+              //   ),
+              // ),
+              child: Builder(
+                  builder: (context) => ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => Forgot()));
+                        },
+                        child: Text(
+                          'Forgot Password',
+                        ),
+                        style: ElevatedButton.styleFrom(primary: colorGreen),
+                      )),
             ),
           ),
           SizedBox(
@@ -138,7 +152,10 @@ class _LoginState extends State<Login> {
               height: 50,
               child: ElevatedButton(
                 onPressed: () {
-                  _try();
+                  //_try();
+                  String userName = "vivek";
+                  String password = "123456";
+                  _searchUser(userName, password);
                 },
                 child: Text('Try'),
                 style: ElevatedButton.styleFrom(
@@ -152,7 +169,6 @@ class _LoginState extends State<Login> {
     );
   }
 }
-
 
 class CustomWidget extends StatelessWidget {
   const CustomWidget(
@@ -224,10 +240,9 @@ Future<void> loginValidate(mN, pW) async {
   int l = _users.length;
   if (mN.toString().isEmpty || pW.toString().isEmpty) {
     print('Mobile Number and Password is Empty');
-  } else if ( l == 1 ) {
+  } else if (l == 1) {
     print('Mobile Number Found');
     print('Welcome $mN');
-    
   } else {
     print('Mobile Number and Password does not matched');
   }

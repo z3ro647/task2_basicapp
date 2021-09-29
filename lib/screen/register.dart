@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:task2_basicapp/color/customcolor.dart';
 import 'package:task2_basicapp/database/sql_helper.dart';
+import 'package:task2_basicapp/screen/login.dart';
 
 class Register extends StatefulWidget {
   const Register({Key? key}) : super(key: key);
@@ -10,6 +12,7 @@ class Register extends StatefulWidget {
 }
 
 class _RegisterState extends State<Register> {
+  final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     final TextEditingController name = TextEditingController();
@@ -32,105 +35,51 @@ class _RegisterState extends State<Register> {
             height: 350.0,
             child: Image.asset('assets/images/reward.jpg'),
           ),
-          Container(
-            padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 40.0),
-            child: TextField(
-              controller: name,
-              style: TextStyle(
-                  color: colorGreen,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20.0),
-              decoration: InputDecoration(
-                  labelText: "Name",
-                  labelStyle: TextStyle(color: Colors.grey),
-                  hintText: "Enter your name",
-                  hintStyle: TextStyle(color: colorGreen),
-                  prefixIcon: Icon(
-                    Icons.person,
-                    color: colorGreen,
-                  ),
-                  border: InputBorder.none),
-            ),
-          ),
-          Container(
-            padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 40.0),
-            child: TextField(
-              controller: email,
-              style: TextStyle(
-                  color: colorGreen,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20.0),
-              decoration: InputDecoration(
-                  labelText: "Email",
-                  labelStyle: TextStyle(color: Colors.grey),
-                  hintText: "Enter your Email",
-                  hintStyle: TextStyle(color: colorGreen),
-                  prefixIcon: Icon(
-                    Icons.email,
-                    color: colorGreen,
-                  ),
-                  border: InputBorder.none),
-            ),
-          ),
-          Container(
-            padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 40.0),
-            child: TextField(
-              controller: mobile,
-              style: TextStyle(
-                  color: colorGreen,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20.0),
-              decoration: InputDecoration(
-                  labelText: "Mobile Number",
-                  labelStyle: TextStyle(color: Colors.grey),
-                  hintText: "Enter your Mobile Number",
-                  hintStyle: TextStyle(color: colorGreen),
-                  prefixIcon: Icon(
-                    Icons.phone_android,
-                    color: colorGreen,
-                  ),
-                  border: InputBorder.none),
-            ),
-          ),
-          Container(
-            padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 40.0),
-            child: TextField(
-              controller: password,
-              style: TextStyle(
-                  color: colorGreen,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20.0),
-              decoration: InputDecoration(
-                  labelText: "Password",
-                  labelStyle: TextStyle(color: Colors.grey),
-                  hintText: "Enter your Password",
-                  hintStyle: TextStyle(color: colorGreen),
-                  prefixIcon: Icon(
-                    Icons.lock,
-                    color: colorGreen,
-                  ),
-                  border: InputBorder.none),
-            ),
-          ),
-          Container(
-            padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 40.0),
-            child: TextField(
-              controller: confirmpassword,
-              style: TextStyle(
-                  color: colorGreen,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20.0),
-              decoration: InputDecoration(
-                  labelText: "Confirm Password",
-                  labelStyle: TextStyle(color: Colors.grey),
-                  hintText: "Enter your Password",
-                  hintStyle: TextStyle(color: colorGreen),
-                  prefixIcon: Icon(
-                    Icons.person,
-                    color: colorGreen,
-                  ),
-                  border: InputBorder.none),
-            ),
+          Form(
+            key: _formKey,
+            child: Column(children: [
+              SizedBox(
+                height: 10.0,
+              ),
+              CustomWidget(
+                  labeltext: "Name",
+                  hinttext: "Enter your name",
+                  icon: Icons.person,
+                  controller: name),
+              SizedBox(
+                height: 10.0,
+              ),
+              CustomWidget(
+                  labeltext: "Email",
+                  hinttext: "Enter your Email",
+                  icon: Icons.email,
+                  controller: email),
+              SizedBox(
+                height: 10.0,
+              ),
+              CustomWidget(
+                labeltext: 'Mobile',
+                hinttext: 'Enter Mobile',
+                icon: Icons.person,
+                controller: mobile,
+              ),
+              SizedBox(
+                height: 10.0,
+              ),
+              CustomWidget(
+                  labeltext: 'Password',
+                  hinttext: 'Enter Password',
+                  icon: Icons.lock,
+                  controller: password),
+              SizedBox(
+                height: 10.0,
+              ),
+              CustomWidget(
+                  labeltext: "Confirm Password",
+                  hinttext: "Enter Confirm Password",
+                  icon: Icons.lock,
+                  controller: confirmpassword)
+            ]),
           ),
           SizedBox(
             height: 20.0,
@@ -142,13 +91,8 @@ class _RegisterState extends State<Register> {
               height: 50,
               child: ElevatedButton(
                 onPressed: () {
-                  String txtName = name.text.toString();
-                  String txtEmail = email.text.toString();
-                  String txtMobile = mobile.text.toString();
-                  String txtPassword = password.text.toString();
-                  String txtConfirmpassword = confirmpassword.text.toString();
-                  formValidate(txtName, txtEmail, txtMobile, txtPassword,
-                      txtConfirmpassword);
+                  if (_formKey.currentState!.validate())
+                    checkMobile(name.text, email.text, mobile.text, password.text, confirmpassword.text);
                 },
                 child: Text('Register'),
                 style: ElevatedButton.styleFrom(
@@ -181,36 +125,87 @@ class _RegisterState extends State<Register> {
   }
 }
 
-Future<void> formValidate(String txtName, String txtEmail, String txtMobile,
-    String txtPassword, String txtConfirmpassword) async {
-  if (txtName.isEmpty) {
-    print('Name can not be empty');
-  } else if(txtName.length < 5) {
-    print('Name is Short');
-  } else if (txtEmail.isEmpty) {
-    print('Email can not be empty');
-  } else if (RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(txtEmail) == false) {
-    print('Enter Valid Email');
-  } else if (txtMobile.isEmpty) {
-    print('Mobile number can not be empty');
-  } else if (txtMobile.length < 10) {
-    print('Enter Valid Mobile Number');
-  } else if (txtPassword.isEmpty || txtConfirmpassword.isEmpty) {
-    print('Password and confirm password can not be empty');
-  } else if (!txtPassword.endsWith(txtConfirmpassword)) {
-    print('Enter same password in password and confirm password');
-  } else {
-    checkMobile(txtName, txtEmail, txtMobile, txtPassword, txtConfirmpassword);
+class CustomWidget extends StatelessWidget {
+  const CustomWidget(
+      {Key? key,
+      required this.labeltext,
+      required this.hinttext,
+      required this.icon,
+      required this.controller})
+      : super(key: key);
+
+  final String labeltext;
+  final String hinttext;
+  final IconData icon;
+  final TextEditingController controller;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 40.0),
+      child: Material(
+        borderRadius: BorderRadius.circular(10.0),
+        elevation: 2.0,
+        shadowColor: Colors.blue,
+        child: TextFormField(
+            controller: controller,
+            style: TextStyle(
+                color: colorGreen, fontWeight: FontWeight.bold, fontSize: 20.0),
+            autocorrect: false,
+            decoration: InputDecoration(
+              labelText: labeltext,
+              labelStyle: TextStyle(
+                  color: Colors.grey[400], fontWeight: FontWeight.bold),
+              hintText: hinttext,
+              prefixIcon: Icon(
+                icon,
+                color: colorGreen,
+              ),
+              hintStyle: TextStyle(
+                color: colorGreen,
+              ),
+              filled: true,
+              fillColor: Colors.white70,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+            ),
+            validator: (value) {
+              if (labeltext == 'Name') {
+                if(value == null || value.isEmpty)
+                return 'Name is Empty';
+              } else if(labeltext == 'Email') {
+                if(value == null || value.isEmpty || !value.contains('@'))
+                  return 'Enter valid Email';
+              } else if (labeltext == 'Mobile') {
+                if (value == null || value.isEmpty) {
+                  return 'Mobile is Empty';
+                }
+                return null;
+              } else if (labeltext == 'Password') {
+                if (value == null || value.isEmpty) {
+                  return 'Password is Empty';
+                }
+              } else if (labeltext == 'Confirm Password') {
+                if(value == null || value.isEmpty) {
+                  return 'Confirm Password is Empty';
+                }
+                return null;
+              }
+            }),
+      ),
+    );
   }
 }
 
-Future<void> checkMobile(String txtName, String txtEmail, String txtMobile, String txtPassword, String txtConfirmpassword) async {
+Future<void> checkMobile(String txtName, String txtEmail, String txtMobile,
+    String txtPassword, String txtConfirmpassword) async {
   List<Map<String, dynamic>> _users = [];
   // Check mobile number
   final data = await SQLHelper.searchMobile(txtMobile);
   _users = data;
   int l = _users.length;
-  if(l == 1) {
+  if (l == 1) {
     print('Mobile already exist!');
   } else {
     // Insert a new users to the database
@@ -221,5 +216,6 @@ Future<void> checkMobile(String txtName, String txtEmail, String txtMobile, Stri
     txtMobile = '';
     txtPassword = '';
     txtConfirmpassword = '';
+    Get.to(Login());
   }
 }
