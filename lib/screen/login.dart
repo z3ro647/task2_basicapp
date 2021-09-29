@@ -4,6 +4,7 @@ import 'package:task2_basicapp/database/sql_helper.dart';
 import 'package:task2_basicapp/screen/forgot.dart';
 import 'package:task2_basicapp/screen/register.dart';
 import 'package:task2_basicapp/service/userdataservice.dart';
+import 'package:task2_basicapp/userinfoclass.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -30,6 +31,23 @@ class _LoginState extends State<Login> {
 
   void _try() async {
     _userDataService.getUser();
+  }
+
+  Future<void> _try1() async {
+    var data = _userDataService.getUser1();
+    data.then((value) {
+      print("Name: "+value.name);
+      print("Address: "+value.address);
+      print("UserName: "+value.userName);
+      print("Password: "+value.password);
+    });
+    data.then((value) => print(value.name));
+    // data.then((result) {
+    //   print(result);
+    //   setState(() {
+    //     someVal = result;
+    //   });
+    // });
   }
 
   void _searchUser(String userName, String password) async {
@@ -100,15 +118,6 @@ class _LoginState extends State<Login> {
                 const EdgeInsets.symmetric(vertical: 0.0, horizontal: 40.0),
             child: SizedBox(
               height: 50,
-              // child: ElevatedButton(
-              //   onPressed: () {
-              //     Forgot();
-              //   },
-              //   child: Text('Forgot Password'),
-              //   style: ElevatedButton.styleFrom(
-              //     primary: colorGreen,
-              //   ),
-              // ),
               child: Builder(
                   builder: (context) => ElevatedButton(
                         onPressed: () {
@@ -153,9 +162,10 @@ class _LoginState extends State<Login> {
               child: ElevatedButton(
                 onPressed: () {
                   //_try();
-                  String userName = "vivek";
-                  String password = "123456";
-                  _searchUser(userName, password);
+                  // String userName = "vivek";
+                  // String password = "123456";
+                  // _searchUser(userName, password);
+                  _try1();
                 },
                 child: Text('Try'),
                 style: ElevatedButton.styleFrom(
@@ -164,6 +174,24 @@ class _LoginState extends State<Login> {
               ),
             ),
           ),
+          SizedBox(
+            height: 20.0,
+          ),
+          Center(
+            child: FutureBuilder<UserInfoModel>(
+                future: _userDataService.getUser1(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    String tempName = "";
+                    tempName = snapshot.data!.name;
+                    //print(tempName);
+                    return Text(snapshot.data!.name);
+                  } else if (snapshot.hasError) {
+                    return Text('${snapshot.error}');
+                  }
+                  return const CircularProgressIndicator();
+                }),
+          )
         ],
       ),
     );
