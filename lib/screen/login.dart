@@ -1,6 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:task2_basicapp/color/customcolor.dart';
 import 'package:task2_basicapp/database/sql_helper.dart';
+import 'package:task2_basicapp/screen/dashboard.dart';
 import 'package:task2_basicapp/screen/forgot.dart';
 import 'package:task2_basicapp/screen/register.dart';
 import 'package:task2_basicapp/service/userdataservice.dart';
@@ -18,19 +21,30 @@ class _LoginState extends State<Login> {
 
   TextEditingController mobile = TextEditingController();
   TextEditingController password = TextEditingController();
+  
+  CollectionReference _userss =
+      FirebaseFirestore.instance.collection('users');
 
   final _userDataService = UserDataService();
 
   void _checkUser(String mobile, String password) async {
-    //_userDataService.getUser(mobile.toString(), password.toString());
-    //print(_userDataService.getUser(mobile.toString(), password.toString()));
-    //print(response.toString());
-    // SQLHelper.getUser(mobile, password);
-    // List<Map<String, dynamic>> _users = [];
+    var data = _userDataService.getOneUser(mobile, password);
+    data.then((value) {
+      String tempMobile;
+      String tempPassword;
+      tempMobile = value.mobile;
+      tempPassword = value.password;
+      
+    });
+  }
+
+  void loginUser2Firebase() async {
+    
+    Get.to(Dashboard());
   }
 
   void _try() async {
-    _userDataService.getUser();
+    _userDataService.getAllUser();
   }
 
   Future<void> _try1() async {
@@ -40,18 +54,8 @@ class _LoginState extends State<Login> {
       print("Address: "+value.address);
       print("UserName: "+value.userName);
       print("Password: "+value.password);
+      print("ID: "+value.sId);
     });
-    data.then((value) => print(value.name));
-    // data.then((result) {
-    //   print(result);
-    //   setState(() {
-    //     someVal = result;
-    //   });
-    // });
-  }
-
-  void _searchUser(String userName, String password) async {
-    _userDataService.searchUser(userName, password);
   }
 
   @override
@@ -100,8 +104,8 @@ class _LoginState extends State<Login> {
                     // String mN = mobile.text.toString();
                     // String pW = password.text.toString();
                     // loginValidate(mobile.text.toString(), password.text.toString());
-                    _checkUser(
-                        mobile.text.toString(), password.text.toString());
+                    //_checkUser(mobile.text.toString(), password.text.toString());
+                    loginUser2Firebase();
                 },
                 child: Text('Login'),
                 style: ElevatedButton.styleFrom(
@@ -154,44 +158,6 @@ class _LoginState extends State<Login> {
                       ))),
             ],
           ),
-          Padding(
-            padding:
-                const EdgeInsets.symmetric(vertical: 0.0, horizontal: 40.0),
-            child: SizedBox(
-              height: 50,
-              child: ElevatedButton(
-                onPressed: () {
-                  //_try();
-                  // String userName = "vivek";
-                  // String password = "123456";
-                  // _searchUser(userName, password);
-                  _try1();
-                },
-                child: Text('Try'),
-                style: ElevatedButton.styleFrom(
-                  primary: colorGreen,
-                ),
-              ),
-            ),
-          ),
-          SizedBox(
-            height: 20.0,
-          ),
-          Center(
-            child: FutureBuilder<UserInfoModel>(
-                future: _userDataService.getUser1(),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    String tempName = "";
-                    tempName = snapshot.data!.name;
-                    //print(tempName);
-                    return Text(snapshot.data!.name);
-                  } else if (snapshot.hasError) {
-                    return Text('${snapshot.error}');
-                  }
-                  return const CircularProgressIndicator();
-                }),
-          )
         ],
       ),
     );

@@ -1,8 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:task2_basicapp/color/customcolor.dart';
 import 'package:task2_basicapp/database/sql_helper.dart';
 import 'package:task2_basicapp/screen/login.dart';
+import 'package:task2_basicapp/service/userdataservice.dart';
 
 class Register extends StatefulWidget {
   const Register({Key? key}) : super(key: key);
@@ -13,13 +15,36 @@ class Register extends StatefulWidget {
 
 class _RegisterState extends State<Register> {
   final _formKey = GlobalKey<FormState>();
+
+  TextEditingController name = TextEditingController();
+  TextEditingController email = TextEditingController();
+  TextEditingController mobile = TextEditingController();
+  TextEditingController password = TextEditingController();
+  TextEditingController confirmpassword = TextEditingController();
+
+  CollectionReference _userss =
+      FirebaseFirestore.instance.collection('users');
+
+  void registerUser2Firebase() async {
+    await _userss.add({"name": name, "mobile": mobile, "email": email, "password": password});
+    Get.to(Login());
+  }
+  
+  final _userDataService = UserDataService();
+
+  void registerUser(String name, String address, String username, String password, String mobile, String email) async {
+    var data = _userDataService.insertUser(name, address, username, password, mobile, email);
+    data.then((value) {
+      String tempMobile;
+      String tempPassword;
+      tempMobile = value.mobile;
+      tempPassword = value.password;
+      
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    final TextEditingController name = TextEditingController();
-    TextEditingController email = TextEditingController();
-    TextEditingController mobile = TextEditingController();
-    TextEditingController password = TextEditingController();
-    TextEditingController confirmpassword = TextEditingController();
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
@@ -92,7 +117,9 @@ class _RegisterState extends State<Register> {
               child: ElevatedButton(
                 onPressed: () {
                   if (_formKey.currentState!.validate())
-                    checkMobile(name.text, email.text, mobile.text, password.text, confirmpassword.text);
+                    //checkMobile(name.text, email.text, mobile.text, password.text, confirmpassword.text);
+                    //registerUser(name.text, mobile.text, password.text, username.text, email.text, address.text);
+                    registerUser2Firebase();
                 },
                 child: Text('Register'),
                 style: ElevatedButton.styleFrom(

@@ -5,7 +5,7 @@ import 'package:task2_basicapp/data/userdatamodel.dart';
 import 'package:task2_basicapp/userinfoclass.dart';
 
 class UserDataService {
-  Future<UserResponse> getUser() async {
+  Future<UserResponse> getAllUser() async {
 
     final uri = Uri.https(
         'userinfo-42d8.restdb.io', '/rest/userinfo');
@@ -20,6 +20,23 @@ class UserDataService {
 
     print(response.body);
     return UserResponse.fromJson(jsonDecode(response.body)[0]);
+  }
+
+  Future<UserInfoModel> getOneUser(mobile, password) async {
+    final queryParameters = {
+      'q': '{"UserName":"$mobile","Password":"$password"}',
+    };
+    final uri = Uri.https(
+        'userinfo-42d8.restdb.io', '/rest/userinfo', queryParameters);
+
+    final response = await http.get(
+      uri,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'x-apikey': 'e93fffd0f227cb5af0123c85006bce20db71d',
+      },
+    );
+    return UserInfoModel.fromJson(jsonDecode(response.body)[0]);
   }
 
   Future<UserInfoModel> getUser1() async {
@@ -39,25 +56,20 @@ class UserDataService {
     return UserInfoModel.fromJson(jsonDecode(response.body)[0]);
   }
 
-  searchUser(String userName, String password) async {
+  Future<UserInfoModel> insertUser(String name, String address, String username, String password, String mobile, String email) async {
     final queryParameters = {
-      'q': '{"UserName":"$userName","Password":"$password"}',
+      'q': '{"Name":"$name","Address":"$address","UserName":"$username","Mobile":"$mobile","Password":"$password","Email":"$email"}',
     };
     final uri = Uri.https(
-      'userinfo-42d8.restdb.io', '/rest/userinfo', queryParameters
-    );
+        'userinfo-42d8.restdb.io', '/rest/userinfo', queryParameters);
 
-    //print(uri);
-
-    final response = await http.get(
+    final response = await http.post(
       uri,
       headers: <String, String>{
         'Content-Type': 'application/json',
         'x-apikey': 'e93fffd0f227cb5af0123c85006bce20db71d',
       },
     );
-
-    print('Data is: ');
-    print(response.body);
+    return UserInfoModel.fromJson(jsonDecode(response.body)[0]);
   }
 }

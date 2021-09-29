@@ -1,17 +1,21 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:task2_basicapp/screen/dashboard.dart';
 import 'package:task2_basicapp/screen/login.dart';
+import 'package:task2_basicapp/screen/screen1.dart';
 
-void main() {
+void main() async {
   //runApp(MyApp());
-    runApp(
-    GetMaterialApp(
-      home: MyApp(),
-      routes: {
-        '/login':(BuildContext context) => Login(),
-      },
-    )
-  );
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(GetMaterialApp(
+    home: MyApp(),
+    routes: {
+      '/login': (BuildContext context) => Login(),
+      '/dashboard': (BuildContext context) => Dashboard(),
+    },
+  ));
 }
 
 class MyApp extends StatelessWidget {
@@ -24,7 +28,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({ Key? key }) : super(key: key);
+  const MyHomePage({Key? key}) : super(key: key);
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
@@ -34,7 +38,8 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Login()
+        body: Login()
+        //body: ProductScreen()
     );
   }
 }

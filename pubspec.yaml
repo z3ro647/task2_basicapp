@@ -32,6 +32,11 @@ dependencies:
   sqflite:
   get:
 
+  firebase_core: 
+  firebase_auth: 
+  cloud_firestore: 
+  google_sign_in: 
+
   hexcolor: ^2.0.5
   http:
 
