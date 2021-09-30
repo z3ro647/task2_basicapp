@@ -1,35 +1,21 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-class ProductScreen extends StatefulWidget {
-  const ProductScreen({ Key? key }) : super(key: key);
+class FirebaseUsersList extends StatefulWidget {
+  const FirebaseUsersList({ Key? key }) : super(key: key);
 
   @override
-  _ProductScreenState createState() => _ProductScreenState();
+  _FirebaseUsersListState createState() => _FirebaseUsersListState();
 }
 
-class _ProductScreenState extends State<ProductScreen> {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: ProductScreenContent()
-    );
-  }
-}
+class _FirebaseUsersListState extends State<FirebaseUsersList> {
+  final TextEditingController name = TextEditingController();
+  final TextEditingController email = TextEditingController();
+  final TextEditingController username = TextEditingController();
+  final TextEditingController password = TextEditingController();
 
-class ProductScreenContent extends StatefulWidget {
-  const ProductScreenContent({ Key? key }) : super(key: key);
-
-  @override
-  _ProductScreenContentState createState() => _ProductScreenContentState();
-}
-
-class _ProductScreenContentState extends State<ProductScreenContent> {
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _priceController = TextEditingController();
-
-  CollectionReference _productss =
-      FirebaseFirestore.instance.collection('products');
+  CollectionReference userlist =
+      FirebaseFirestore.instance.collection('userslist');
 
   // This function is triggered when the floatting button or one of the edit buttons is pressed
   // Adding a product if no documentSnapshot is passed
@@ -39,8 +25,10 @@ class _ProductScreenContentState extends State<ProductScreenContent> {
     String action = 'create';
     if (documentSnapshot != null) {
       action = 'update';
-      _nameController.text = documentSnapshot['name'];
-      _priceController.text = documentSnapshot['price'].toString();
+      name.text = documentSnapshot['name'];
+      email.text = documentSnapshot['email'];
+      username.text = documentSnapshot['username'];
+      password.text = documentSnapshot['passowrd'];
     }
 
 
@@ -55,15 +43,20 @@ class _ProductScreenContentState extends State<ProductScreenContent> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 TextField(
-                  controller: _nameController,
+                  controller: name,
                   decoration: InputDecoration(labelText: 'Name'),
                 ),
                 TextField(
-                  keyboardType: TextInputType.numberWithOptions(decimal: true),
-                  controller: _priceController,
-                  decoration: InputDecoration(
-                    labelText: 'Price',
-                  ),
+                  controller: email,
+                  decoration: InputDecoration(labelText: 'Price'),
+                ),
+                TextField(
+                  controller: username,
+                  decoration: InputDecoration(labelText: 'Username'),
+                ),
+                TextField(
+                  controller: password,
+                  decoration: InputDecoration(labelText: 'Password'),
                 ),
                 SizedBox(
                   height: 20,
@@ -71,25 +64,28 @@ class _ProductScreenContentState extends State<ProductScreenContent> {
                 ElevatedButton(
                   child: Text(action == 'create' ? 'Create' : 'Update'),
                   onPressed: () async {
-                    final String? name = _nameController.text;
-                    final double? price =
-                        double.tryParse(_priceController.text);
-                    if (name != null && price != null) {
+                    final String? txtname = name.text;
+                    final String? txtemail = email.text;
+                    final String? txtusername = username.text;
+                    final String? txtpassword = password.text;
+                    if (txtname != null && txtemail != null && txtusername != null && txtpassword != null) {
                       if (action == 'create') {
                         // Persist a new product to Firestore
-                        await _productss.add({"name": name, "price": price});
+                        await userlist.add({"name": txtname, "email": txtemail, "username": txtusername, "password": txtpassword});
                       }
 
                       if (action == 'update') {
                         // Update the product
-                        await _productss
+                        await userlist
                             .doc(documentSnapshot!.id)
-                            .update({"name": name, "price": price});
+                            .update({"name": txtname, "email": txtemail, "username": txtusername, "password": txtpassword});
                       }
 
                       // Clear the text fields
-                      _nameController.text = '';
-                      _priceController.text = '';
+                      name.text = '';
+                      email.text = '';
+                      username.text = '';
+                      password.text = '';
 
                       // Hide the bottom sheet
                       Navigator.of(context).pop();
@@ -103,12 +99,12 @@ class _ProductScreenContentState extends State<ProductScreenContent> {
   }
 
   // Deleteing a product by id
-  Future<void> _deleteProduct(String productId) async {
-    await _productss.doc(productId).delete();
+  Future<void> _deleteProduct(String userId) async {
+    await userlist.doc(userId).delete();
 
     // Show a snackbar
     ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('You have successfully deleted a product')));
+        SnackBar(content: Text('You have successfully deleted a user')));
   }
 
 
@@ -116,11 +112,11 @@ class _ProductScreenContentState extends State<ProductScreenContent> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Kindacode.com'),
+        title: Text('UserList from Firebase'),
       ),
       // Using StreamBuilder to display all products from Firestore in real-time
       body: StreamBuilder(
-        stream: _productss.snapshots(),
+        stream: userlist.snapshots(),
         builder: (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
           if (streamSnapshot.hasData) {
             return ListView.builder(
@@ -131,8 +127,8 @@ class _ProductScreenContentState extends State<ProductScreenContent> {
                 return Card(
                   margin: EdgeInsets.all(10),
                   child: ListTile(
-                    title: Text(documentSnapshot['name']),
-                    subtitle: Text(documentSnapshot['price'].toString()),
+                    title: Text("Name: "+documentSnapshot['name']),
+                    subtitle: Text("Email: "+documentSnapshot['email']+", Username: "+documentSnapshot['username']),
                     trailing: SizedBox(
                       width: 100,
                       child: Row(

@@ -25,7 +25,7 @@ class _RegisterState extends State<Register> {
   CollectionReference _userss =
       FirebaseFirestore.instance.collection('users');
 
-  void registerUser2Firebase() async {
+  void registerUser2Firebase(name, mobile, email, password) async {
     await _userss.add({"name": name, "mobile": mobile, "email": email, "password": password});
     Get.to(Login());
   }
@@ -119,7 +119,7 @@ class _RegisterState extends State<Register> {
                   if (_formKey.currentState!.validate())
                     //checkMobile(name.text, email.text, mobile.text, password.text, confirmpassword.text);
                     //registerUser(name.text, mobile.text, password.text, username.text, email.text, address.text);
-                    registerUser2Firebase();
+                    registerUser2Firebase(name.text, mobile.text, email.text, password.text);
                 },
                 child: Text('Register'),
                 style: ElevatedButton.styleFrom(

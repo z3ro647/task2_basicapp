@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:task2_basicapp/color/customcolor.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({ Key? key }) : super(key: key);
@@ -13,6 +14,7 @@ class _DashboardState extends State<Dashboard> {
     return Scaffold(
       appBar: AppBar(
         title: Text('DashBoard'),
+        backgroundColor: colorGreen,
       ),
       body: Center(
         child: Text(

@@ -2,8 +2,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:task2_basicapp/screen/dashboard.dart';
+import 'package:task2_basicapp/screen/firebaseuserslist.dart';
 import 'package:task2_basicapp/screen/login.dart';
-import 'package:task2_basicapp/screen/screen1.dart';
 
 void main() async {
   //runApp(MyApp());
@@ -38,8 +38,9 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Login()
-        //body: ProductScreen()
+      //body: Login()
+      //body: Search(),
+      body: FirebaseUsersList(),
     );
   }
 }

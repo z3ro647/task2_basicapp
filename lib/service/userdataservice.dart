@@ -40,18 +40,20 @@ class UserDataService {
   }
 
   Future<UserInfoModel> getUser1() async {
+    int id = 0;
     final queryParameters = {
-      'q': '{"UserName":"vivek","Password":"123456"}',
+      'q': id,
     };
     final uri = Uri.https(
         'userinfo-42d8.restdb.io', '/rest/userinfo', queryParameters);
 
-    final response = await http.get(
+    final response = await http.delete(
       uri,
       headers: <String, String>{
         'Content-Type': 'application/json',
         'x-apikey': 'e93fffd0f227cb5af0123c85006bce20db71d',
       },
+      body: {"UserName":"vivek"}
     );
     return UserInfoModel.fromJson(jsonDecode(response.body)[0]);
   }

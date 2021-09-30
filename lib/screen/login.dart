@@ -6,6 +6,7 @@ import 'package:task2_basicapp/database/sql_helper.dart';
 import 'package:task2_basicapp/screen/dashboard.dart';
 import 'package:task2_basicapp/screen/forgot.dart';
 import 'package:task2_basicapp/screen/register.dart';
+import 'package:task2_basicapp/screen/search.dart';
 import 'package:task2_basicapp/service/userdataservice.dart';
 import 'package:task2_basicapp/userinfoclass.dart';
 
@@ -22,8 +23,7 @@ class _LoginState extends State<Login> {
   TextEditingController mobile = TextEditingController();
   TextEditingController password = TextEditingController();
   
-  CollectionReference _userss =
-      FirebaseFirestore.instance.collection('users');
+  CollectionReference _users = FirebaseFirestore.instance.collection('users');
 
   final _userDataService = UserDataService();
 
@@ -37,10 +37,23 @@ class _LoginState extends State<Login> {
       
     });
   }
+  
+  void loginUser2Firebase(mobile, password, [DocumentSnapshot? documentSnapshot]) async {
+    //_users.get().then((value) => null)
+   // Get.to(Dashboard());
+  }
 
-  void loginUser2Firebase() async {
-    
-    Get.to(Dashboard());
+  static Stream<QuerySnapshot> readItems() {
+    //CollectionReference notesItemCollection = FirebaseFirestore.instance.collection('users').doc().collection('name');
+    CollectionReference notesItemCollection = FirebaseFirestore.instance.collection('users').doc().collection('name');
+    return notesItemCollection.snapshots();
+  }
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    print('object');
+    //print(readItems());
   }
 
   void _try() async {
@@ -105,7 +118,7 @@ class _LoginState extends State<Login> {
                     // String pW = password.text.toString();
                     // loginValidate(mobile.text.toString(), password.text.toString());
                     //_checkUser(mobile.text.toString(), password.text.toString());
-                    loginUser2Firebase();
+                    loginUser2Firebase(mobile.text, password.text);
                 },
                 child: Text('Login'),
                 style: ElevatedButton.styleFrom(
@@ -157,6 +170,28 @@ class _LoginState extends State<Login> {
                         style: TextStyle(color: colorGreen),
                       ))),
             ],
+          ),
+
+                      
+          Padding(
+            padding:
+                const EdgeInsets.symmetric(vertical: 0.0, horizontal: 40.0),
+            child: SizedBox(
+              height: 50,
+              child: Builder(
+                  builder: (context) => ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => Search()));
+                        },
+                        child: Text(
+                          'Search',
+                        ),
+                        style: ElevatedButton.styleFrom(primary: colorGreen),
+                      )),
+            ),
           ),
         ],
       ),
