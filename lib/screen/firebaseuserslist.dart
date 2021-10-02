@@ -9,104 +9,93 @@ class FirebaseUsersList extends StatefulWidget {
 }
 
 class _FirebaseUsersListState extends State<FirebaseUsersList> {
-  final TextEditingController name = TextEditingController();
-  final TextEditingController email = TextEditingController();
-  final TextEditingController username = TextEditingController();
-  final TextEditingController password = TextEditingController();
 
-  CollectionReference userlist =
-      FirebaseFirestore.instance.collection('userslist');
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController usernameController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
 
-  // This function is triggered when the floatting button or one of the edit buttons is pressed
-  // Adding a product if no documentSnapshot is passed
-  // If documentSnapshot != null then update an existing product
+  CollectionReference userslist = FirebaseFirestore.instance.collection('userslist');
 
   Future<void> _createOrUpdate([DocumentSnapshot? documentSnapshot]) async {
-    String action = 'create';
+    String action = 'Create';
     if (documentSnapshot != null) {
-      action = 'update';
-      name.text = documentSnapshot['name'];
-      email.text = documentSnapshot['email'];
-      username.text = documentSnapshot['username'];
-      password.text = documentSnapshot['passowrd'];
+      action = 'Update';
+      nameController.text = documentSnapshot['name'];
+      emailController.text = documentSnapshot['email'];
+      usernameController.text = documentSnapshot['username'];
+      passwordController.text = documentSnapshot['password'];
     }
 
-
     await showModalBottomSheet(
-        isScrollControlled: true,
-        context: context,
-        builder: (BuildContext ctx) {
-          return Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                TextField(
-                  controller: name,
-                  decoration: InputDecoration(labelText: 'Name'),
-                ),
-                TextField(
-                  controller: email,
-                  decoration: InputDecoration(labelText: 'Price'),
-                ),
-                TextField(
-                  controller: username,
-                  decoration: InputDecoration(labelText: 'Username'),
-                ),
-                TextField(
-                  controller: password,
-                  decoration: InputDecoration(labelText: 'Password'),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                ElevatedButton(
-                  child: Text(action == 'create' ? 'Create' : 'Update'),
-                  onPressed: () async {
-                    final String? txtname = name.text;
-                    final String? txtemail = email.text;
-                    final String? txtusername = username.text;
-                    final String? txtpassword = password.text;
-                    if (txtname != null && txtemail != null && txtusername != null && txtpassword != null) {
-                      if (action == 'create') {
-                        // Persist a new product to Firestore
-                        await userlist.add({"name": txtname, "email": txtemail, "username": txtusername, "password": txtpassword});
-                      }
-
-                      if (action == 'update') {
-                        // Update the product
-                        await userlist
-                            .doc(documentSnapshot!.id)
-                            .update({"name": txtname, "email": txtemail, "username": txtusername, "password": txtpassword});
-                      }
-
-                      // Clear the text fields
-                      name.text = '';
-                      email.text = '';
-                      username.text = '';
-                      password.text = '';
-
-                      // Hide the bottom sheet
-                      Navigator.of(context).pop();
+      isScrollControlled: true,
+      context: context,
+      builder: (BuildContext ctx) {
+        return Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              TextField(
+                controller: nameController,
+                decoration: InputDecoration(labelText: 'Name'),
+              ),
+              TextField(
+                controller: emailController,
+                decoration: InputDecoration(labelText: 'Email'),
+              ),
+              TextField(
+                controller: usernameController,
+                decoration: InputDecoration(labelText: 'Username'),
+              ),
+              TextField(
+                controller: passwordController,
+                decoration: InputDecoration(labelText: 'Password'),
+              ),
+              ElevatedButton(
+                onPressed: () async {
+                  final String? name = nameController.text;
+                  final String? email = emailController.text;
+                  final String? username = usernameController.text;
+                  final String? password = passwordController.text;
+                  if(name != null && email != null && username != null && password != null) {
+                    if(action == 'Create') {
+                      //Add new user to Firebase Database
+                      await userslist.add({"name": name, "email": email, "username": username, "password": password});
                     }
-                  },
-                )
-              ],
-            ),
-          );
-        });
+                    if(action == 'Update') {
+                      //Update user data to Firebase Database
+                      await userslist.doc(documentSnapshot!.id).update({"name": name, "email": email, "username": username, "password": password});
+                    }
+
+                    nameController.text = '';
+                    emailController.text = '';
+                    usernameController.text = '';
+                    passwordController.text = '';
+
+                    Navigator.of(context).pop();
+                  }
+                },
+                child: Text(action == 'Create' ? 'Create' : 'Update')
+              ),
+              SizedBox(
+                height: 250,
+              )
+            ],
+          ),
+        );
+      }
+    );
   }
 
-  // Deleteing a product by id
-  Future<void> _deleteProduct(String userId) async {
-    await userlist.doc(userId).delete();
+  Future<void> _deleteProduct(String productId) async {
+    await userslist.doc(productId).delete();
 
-    // Show a snackbar
     ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('You have successfully deleted a user')));
+      SnackBar(content: Text('You have successfully deleted a product'))
+    );
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -114,16 +103,14 @@ class _FirebaseUsersListState extends State<FirebaseUsersList> {
       appBar: AppBar(
         title: Text('UserList from Firebase'),
       ),
-      // Using StreamBuilder to display all products from Firestore in real-time
       body: StreamBuilder(
-        stream: userlist.snapshots(),
+        stream: userslist.snapshots(),
         builder: (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
           if (streamSnapshot.hasData) {
             return ListView.builder(
               itemCount: streamSnapshot.data!.docs.length,
               itemBuilder: (context, index) {
-                final DocumentSnapshot documentSnapshot =
-                    streamSnapshot.data!.docs[index];
+                final DocumentSnapshot documentSnapshot = streamSnapshot.data!.docs[index];
                 return Card(
                   margin: EdgeInsets.all(10),
                   child: ListTile(
@@ -133,31 +120,27 @@ class _FirebaseUsersListState extends State<FirebaseUsersList> {
                       width: 100,
                       child: Row(
                         children: [
-                          // Press this button to edit a single product
                           IconButton(
-                              icon: Icon(Icons.edit),
-                              onPressed: () =>
-                                  _createOrUpdate(documentSnapshot)),
-                          // This icon button is used to delete a single product
+                            onPressed: () => _createOrUpdate(documentSnapshot),
+                            icon: Icon(Icons.edit)
+                          ),
                           IconButton(
-                              icon: Icon(Icons.delete),
-                              onPressed: () =>
-                                  _deleteProduct(documentSnapshot.id)),
+                            onPressed: () => _deleteProduct(documentSnapshot.id),
+                            icon: Icon(Icons.delete)
+                          )
                         ],
                       ),
                     ),
                   ),
                 );
-              },
+              }
             );
           }
-
           return Center(
             child: CircularProgressIndicator(),
           );
         },
       ),
-      // Add new product
       floatingActionButton: FloatingActionButton(
         onPressed: () => _createOrUpdate(),
         child: Icon(Icons.add),
