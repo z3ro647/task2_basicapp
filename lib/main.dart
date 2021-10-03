@@ -1,7 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:task2_basicapp/brands.dart';
 import 'package:task2_basicapp/names.dart';
 import 'package:task2_basicapp/screen/dashboard.dart';
 import 'package:task2_basicapp/screen/firebaseuserslist.dart';
