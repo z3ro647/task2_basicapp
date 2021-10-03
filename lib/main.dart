@@ -1,9 +1,12 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:task2_basicapp/brands.dart';
+import 'package:task2_basicapp/names.dart';
 import 'package:task2_basicapp/screen/dashboard.dart';
 import 'package:task2_basicapp/screen/firebaseuserslist.dart';
 import 'package:task2_basicapp/screen/login.dart';
+import 'package:task2_basicapp/screen/search.dart';
 
 void main() async {
   //runApp(MyApp());
@@ -40,7 +43,9 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       //body: Login()
       //body: Search(),
-      body: FirebaseUsersList(),
+      //body: FirebaseUsersList(),
+      //body: Brands(),
+      body: Names(),
     );
   }
 }

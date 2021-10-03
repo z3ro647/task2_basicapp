@@ -23,7 +23,7 @@ class _LoginState extends State<Login> {
   TextEditingController mobile = TextEditingController();
   TextEditingController password = TextEditingController();
   
-  CollectionReference _users = FirebaseFirestore.instance.collection('users');
+  CollectionReference users = FirebaseFirestore.instance.collection('users');
 
   final _userDataService = UserDataService();
 
@@ -41,6 +41,7 @@ class _LoginState extends State<Login> {
   void loginUser2Firebase(mobile, password, [DocumentSnapshot? documentSnapshot]) async {
     //_users.get().then((value) => null)
    // Get.to(Dashboard());
+   users.id;
   }
 
   static Stream<QuerySnapshot> readItems() {
@@ -48,12 +49,9 @@ class _LoginState extends State<Login> {
     CollectionReference notesItemCollection = FirebaseFirestore.instance.collection('users').doc().collection('name');
     return notesItemCollection.snapshots();
   }
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    print('object');
-    //print(readItems());
+
+  void all () async {
+    users.snapshots();
   }
 
   void _try() async {

@@ -15,12 +15,9 @@ class Search extends StatefulWidget {
 
 class _SearchState extends State<Search> {
 
-  Future<Stream<QuerySnapshot<Object?>>> readItems() async {
-    CollectionReference notesItemCollection = FirebaseFirestore.instance.collection('users');
-    var snap = await notesItemCollection.where("email", isEqualTo: "z3ro647@gmail.com").get();
-      //_MapStream<QuerySnapshotPlatform, QuerySnapshot<Map<String, dynamic>>>
-    print(snap);
-    return notesItemCollection.snapshots();
+  Future<void> readItems() async {
+    List<DocumentSnapshot> document = (await users.doc().collection("users").where("email", isEqualTo: "z3ro647@gmail.com").get()).docs;
+    print(document);
   }
 
   @override
