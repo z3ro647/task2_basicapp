@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 
-class Register extends StatefulWidget {
+class NewRegister extends StatefulWidget {
   final Function toggleScreen;
-  const Register({Key? key, required this.toggleScreen}) : super(key: key);
+  const NewRegister({ Key? key, required this.toggleScreen }) : super(key: key);
 
   @override
-  _RegisterState createState() => _RegisterState();
+  _NewRegisterState createState() => _NewRegisterState();
 }
 
-class _RegisterState extends State<Register> {
-
+class _NewRegisterState extends State<NewRegister> {
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
 

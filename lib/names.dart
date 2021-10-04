@@ -22,30 +22,47 @@ class _NamesState extends State<Names> {
         ),
         body: Column(
           children: <Widget>[
-            Row(
-              children: <Widget>[
-                Expanded(
-                    child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextField(
-                    controller: _addNameController,
-                  ),
-                )),
-                RaisedButton(
-                    child: Text("Add to Database"),
-                    onPressed: () {
-                      _addToDatabase(_addNameController.text);
-                      _addNameController.text = "";
-                    })
-              ],
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                decoration:
+                    BoxDecoration(border: Border.all(color: Colors.blueAccent)),
+                child: Row(
+                  children: <Widget>[
+                    Expanded(
+                        child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextField(
+                        controller: _addNameController,
+                        decoration: InputDecoration(labelText: 'Enter Name'),
+                      ),
+                    )),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ElevatedButton(
+                          child: Text("Add to Database"),
+                          onPressed: () {
+                            _addToDatabase(_addNameController.text);
+                            _addNameController.text = "";
+                          }),
+                    )
+                  ],
+                ),
+              ),
             ),
-            Divider(),
+            //Divider(),
             Expanded(
                 child: Column(
               children: <Widget>[
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: TextField(
+                    decoration: InputDecoration(
+                        labelText: 'Enter to Search....',
+                        enabledBorder: const OutlineInputBorder(
+                          borderSide:
+                              const BorderSide(color: Colors.blueAccent, width: 0.0),
+                        )),
                     onChanged: (value) {
                       setState(() {
                         searchString = value.toLowerCase();
@@ -73,7 +90,8 @@ class _NamesState extends State<Names> {
                           );
                         default:
                           return new ListView(
-                            children: snapshot.data!.docs.map((DocumentSnapshot document) {
+                            children: snapshot.data!.docs
+                                .map((DocumentSnapshot document) {
                               return new ListTile(
                                 title: new Text(document['name']),
                               );
