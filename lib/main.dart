@@ -1,9 +1,9 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:task2_basicapp/autologin.dart';
 import 'package:task2_basicapp/names.dart';
 import 'package:task2_basicapp/screen/firebaseuserslist.dart';
-import 'package:task2_basicapp/screen/login.dart';
 
 void main() async {
   //runApp(MyApp());
@@ -34,9 +34,9 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Login(),
       //body: FirebaseUsersList(),
       //body: Names(),
+      body: AutoLogin(),
     );
   }
 }

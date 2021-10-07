@@ -124,7 +124,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                       ),
                     ),
                     SizedBox(
-                      height: 20.0,
+                      height: 30.0,
                     ),
                     MaterialButton(
                       onPressed: () {

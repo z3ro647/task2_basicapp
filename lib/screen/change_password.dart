@@ -90,7 +90,7 @@ class _ChangePasswordState extends State<ChangePassword> {
               ),
             ),
             SizedBox(
-              height: 20.0,
+              height: 30.0,
             ),
             MaterialButton(
               onPressed: () {

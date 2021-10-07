@@ -1,7 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:task2_basicapp/screen/forgot_password.dart';
-import 'package:task2_basicapp/screen/signup.dart';
 import 'package:task2_basicapp/screen/usermain.dart';
 
 class Login extends StatefulWidget {
@@ -12,6 +12,7 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+
   final _formKey = GlobalKey<FormState>();
 
   var email = "";
@@ -159,7 +160,7 @@ class _LoginState extends State<Login> {
                   ),
                 ),
                 SizedBox(
-                  height: 20.0,
+                  height: 30.0,
                 ),
                 MaterialButton(
                   onPressed: () {
@@ -202,18 +203,38 @@ class _LoginState extends State<Login> {
                         style: TextStyle(color: Colors.white),
                       ),
                       TextButton(
-                          onPressed: () => {
-                                Navigator.pushAndRemoveUntil(
-                                    context,
-                                    PageRouteBuilder(
-                                      pageBuilder: (context, a, b) => Signup(),
-                                    ),
-                                    (route) => false)
-                              },
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ForgotPassword(),
+                                ));
+                          },
                           child: Text('SignUp'))
                     ],
                   ),
-                )
+                ),
+                // Container(
+                //   child: Row(
+                //     mainAxisAlignment: MainAxisAlignment.center,
+                //     children: [
+                //       Text(
+                //         "Don't have an Account?",
+                //         style: TextStyle(color: Colors.white),
+                //       ),
+                //       TextButton(
+                //           onPressed: () => {
+                //                 Navigator.pushAndRemoveUntil(
+                //                     context,
+                //                     PageRouteBuilder(
+                //                       pageBuilder: (context, a, b) => Signup(),
+                //                     ),
+                //                     (route) => false)
+                //               },
+                //           child: Text('SignUp'))
+                //     ],
+                //   ),
+                // ),
               ],
             ),
           ),

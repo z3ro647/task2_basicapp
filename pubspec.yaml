@@ -37,6 +37,9 @@ dependencies:
   cloud_firestore: 
   google_sign_in: 
   provider:
+  firebase_storage:
+  path:
+  image_picker:
 
   hexcolor: ^2.0.5
   http:

@@ -1,9 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:task2_basicapp/screen/change_password.dart';
 import 'package:task2_basicapp/screen/login.dart';
 import 'package:task2_basicapp/screen/dashboard.dart';
 import 'package:task2_basicapp/screen/profile.dart';
+import 'package:task2_basicapp/screen/settings.dart';
 
 class UserMain extends StatefulWidget {
   const UserMain({ Key? key }) : super(key: key);
@@ -13,6 +15,12 @@ class UserMain extends StatefulWidget {
 }
 
 class _UserMainState extends State<UserMain> {
+  
+  final uid = FirebaseAuth.instance.currentUser!.uid;
+
+  String fname = "";
+  String lname = "";
+
   int _selectedIndex = 0;
 
   static List<Widget> _widgetOptions = <Widget>[
@@ -28,6 +36,20 @@ class _UserMainState extends State<UserMain> {
   }
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    printName();
+  }
+
+  Future<void> printName() async {
+    DocumentSnapshot variable = await FirebaseFirestore.instance.collection('usernames').doc(uid).get();
+    setState(() {
+      fname = variable.get('fname');
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -36,7 +58,7 @@ class _UserMainState extends State<UserMain> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              "Welcome User",
+              "Welcome, " +fname,
               style: TextStyle(
                 color: Colors.white
               ),
@@ -76,7 +98,7 @@ class _UserMainState extends State<UserMain> {
           ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.red,
+        selectedItemColor: Colors.redAccent,
         unselectedItemColor: Colors.white,
         onTap: _onItemTapped,
       ),
