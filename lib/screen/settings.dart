@@ -4,7 +4,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as path;
 
@@ -23,6 +22,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   final uid = FirebaseAuth.instance.currentUser!.uid;
   
+  // To store in root folder
   FirebaseStorage storage = FirebaseStorage.instance;
 
   TextEditingController fnameController = TextEditingController();
@@ -50,6 +50,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
     print(variable.data());
   }
 
+  Future<void> checkImage() async {
+    final ref = FirebaseStorage.instance.ref().child('profiles/$uid');
+    // no need of the file extension, the name will do fine.
+    var url = await ref.getDownloadURL();
+    print(url);
+  }
+
   Future<void> _upload(String inputSource) async {
     final picker = ImagePicker();
     PickedFile? pickedImage;
@@ -64,11 +71,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
       File imageFile = File(pickedImage.path);
 
       try {
-        // Uploading the selected image with some custom meta data
-        await storage.ref(fileName).putFile(
+        // Uploading the file in root folder
+        //await storage.ref(fileName).putFile(
+        // Uploading the file in profile folder with uid as name
+        await storage.ref().child('profiles/$uid').putFile(
             imageFile,
+            // Uploading the selected image with some custom meta data
             SettableMetadata(customMetadata: {
-              'uploaded_by': 'A bad guy',
+              'uploaded_by': 'Uploder Person Name',
               'description': 'Some description...'
             }));
 
@@ -200,6 +210,23 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       ),
                     ),
                   ),
+                  // Padding(
+                  //   padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 30.0),
+                  //   child: MaterialButton(
+                  //     onPressed: () {
+                  //       checkImage();
+                  //     },
+                  //     height: 70.0,
+                  //     minWidth: double.infinity,
+                  //     color: Colors.redAccent,
+                  //     shape: RoundedRectangleBorder(
+                  //         borderRadius: BorderRadius.circular(20)),
+                  //     child: Text(
+                  //       'Check Image',
+                  //       style: TextStyle(fontSize: 18.0),
+                  //     ),
+                  //   ),
+                  // ),
                 ],
               ))
         ],

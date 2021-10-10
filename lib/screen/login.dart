@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:task2_basicapp/screen/forgot_password.dart';
+import 'package:task2_basicapp/screen/signup.dart';
 import 'package:task2_basicapp/screen/usermain.dart';
 
 class Login extends StatefulWidget {
@@ -207,7 +208,7 @@ class _LoginState extends State<Login> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => ForgotPassword(),
+                                  builder: (context) => Signup(),
                                 ));
                           },
                           child: Text('SignUp'))

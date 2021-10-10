@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
 class Profile extends StatefulWidget {
@@ -18,12 +19,15 @@ class _ProfileState extends State<Profile> {
 
   String fname = "";
   String lname = "";
+
+  String imgSrc = "";
   
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     printName();
+    loadProfileImage();
   }
 
   Future<void> printName() async {
@@ -31,6 +35,16 @@ class _ProfileState extends State<Profile> {
     setState(() {
       fname = variable.get('fname');
       lname = variable.get('lname');
+    });
+  }
+
+  Future<void> loadProfileImage() async {
+    final ref = FirebaseStorage.instance.ref().child('profiles/$uid');
+    // no need of the file extension, the name will do fine.
+    var url = await ref.getDownloadURL();
+    print(url);
+    setState(() {
+      imgSrc = url;
     });
   }
 
@@ -59,11 +73,26 @@ class _ProfileState extends State<Profile> {
       margin: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
       child: ListView(
         children: [
+          // Center(
+          //   child: ClipOval(
+          //     child: Material(
+          //       child: Image.asset(
+          //         'assets/images/reward.jpg',
+          //         fit: BoxFit.fitHeight,
+          //         height: 150,
+          //         width: 150,
+          //       ),
+          //     ),
+          //   ),
+          // ),~
           Center(
             child: ClipOval(
               child: Material(
-                child: Image.asset(
-                  'assets/images/reward.jpg',
+                child: Image.network(
+                  imgSrc,
+                  // loadingBuilder: (context, child, progress) {
+                  //   return progress == null ? child : LinearProgressIndicator();
+                  // },
                   fit: BoxFit.fitHeight,
                   height: 150,
                   width: 150,
