@@ -5,6 +5,7 @@ import 'package:task2_basicapp/screen/change_password.dart';
 import 'package:task2_basicapp/screen/login.dart';
 import 'package:task2_basicapp/screen/dashboard.dart';
 import 'package:task2_basicapp/screen/profile.dart';
+import 'package:task2_basicapp/screen/pushnotification.dart';
 import 'package:task2_basicapp/screen/settings.dart';
 
 class UserMain extends StatefulWidget {
@@ -82,20 +83,36 @@ class _UserMainState extends State<UserMain> {
       backgroundColor: Colors.black,
       body: _widgetOptions.elementAt(_selectedIndex),
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.black,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.home, color: Colors.white,),
+            icon: Icon(
+              Icons.home,
+              //color: Colors.white,
+            ),
             label: 'Dashboard',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person, color: Colors.white,),
+            icon: Icon(
+              Icons.person,
+              //color: Colors.white,
+            ),
             label: 'My Profile',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.settings, color: Colors.white,),
-            label: 'Change Password',
+            icon: Icon(
+              Icons.settings,
+              //color: Colors.white,
+            ),
+            label: 'Password',
           ),
+          // BottomNavigationBarItem(
+          //   icon: Icon(
+          //     Icons.notification_add_outlined,
+          //     //color: Colors.white,
+          //   ),
+          //   label: 'Notification',
+          // ),
         ],
         currentIndex: _selectedIndex,
         selectedItemColor: Colors.redAccent,

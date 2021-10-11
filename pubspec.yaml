@@ -41,6 +41,10 @@ dependencies:
   path:
   image_picker:
 
+  firebase_messaging:
+  flutter_local_notifications:
+  overlay_support:
+
   hexcolor: ^2.0.5
   http:
 
